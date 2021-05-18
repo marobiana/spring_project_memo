@@ -9,7 +9,10 @@ import com.marobiana.memo.post.model.Post;
 
 @Repository
 public interface PostDAO {
-	public List<Post> selectPostListByUserId(int userId);
+	public List<Post> selectPostListByUserId(
+			@Param("userId") int userId,
+			@Param("standardId") Integer standardId,
+			@Param("limit") int limit);
 	
 	public int insertPost(
 			@Param("userId") int userId, 

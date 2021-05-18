@@ -33,8 +33,9 @@
 </div>
 
 <script>
+$(document).ready(function() {
 	$('#loginForm').submit(function(e) {
-		e.preventDefault(); // submit 수행 중단
+		e.preventDefault(); // submit 자동 수행 중단
 		
 		// validation
 		var loginId = $('#loginId').val().trim();
@@ -43,7 +44,7 @@
 			return;
 		}
 		
-		var password = $('#password').val().trim();
+		var password = $('#password').val();
 		if (password == '') {
 			alert("비밀번호를 입력해주세요.");
 			return;
@@ -63,5 +64,5 @@
 			}
 		}); 
 	}); 
-		
+});	
 </script>

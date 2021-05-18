@@ -141,7 +141,7 @@ $(document).ready(function() {
 		//var url = $(this).attr("action");     // form에 있는 action 주소를 가져오는법
 		
 		var url = "/user/sign_up_for_ajax";
-		var data = $(this).serialize();
+		var data = $(this).serialize(); // 폼태그 한번에 보낼 수 있게 구성한다.(이걸 사용하지 않으면 data에 json을 직접 만들어야 함)
 		
 		$.post(url, data)
 		.done(function(data) {

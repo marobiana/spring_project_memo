@@ -23,16 +23,34 @@ public class PostBO {
 	@Autowired
 	private FileManagerService fileManagerService;
 	
-	public List<Post> getPostListByUserId(int userId) {
-		return postDAO.selectPostListByUserId(userId);
+	private static final int POST_MAX_SIZE = 3;
+	
+	public List<Post> getPostListByUserId(int userId, Integer prevId, Integer nextId) {
+		// 페이징 계산
+		// 게시글 번호: 10 9 8 | 7 6 5 | 4 3 2 | 1
+		//-- 만약 7 6 5 에서
+		//   1) 이전을 누른 경우 prevId는 7이 되고, 기준 아이디는 10이 된다.(prevId + POST_MAX_SIZE)
+		//   2) 다음을 누른 경우 nextId는 5가 되고, 기준 아이디는 4가 된다.(nextId - 1)
+		Integer standardId = null;
+		if (prevId != null) {
+			// '이전' 클릭
+			standardId = prevId + POST_MAX_SIZE;
+		} else if (nextId != null) {
+			// '다음' 클릭
+			standardId = nextId - 1;
+		}
+		
+		return postDAO.selectPostListByUserId(userId, standardId, POST_MAX_SIZE);
 	}
 	
 	public int createPost(String loginId, int userId, String subject, String content, MultipartFile file) {
 		String imagePath = null;
-		try {
-			imagePath = fileManagerService.saveFile(loginId, file); // 컴퓨터에 파일 업로드 후 URL path를 얻어낸다.
-		} catch (IOException e) {
-			logger.error("[파일업로드 에러] " + e.getMessage());
+		if (file != null) {
+			try {
+				imagePath = fileManagerService.saveFile(loginId, file); // 컴퓨터에 파일 업로드 후 URL path를 얻어낸다.
+			} catch (IOException e) {
+				logger.error("[파일업로드 에러] " + e.getMessage());
+			}
 		}
 		
 		return postDAO.insertPost(userId, subject, content, imagePath);

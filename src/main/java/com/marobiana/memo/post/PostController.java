@@ -27,7 +27,11 @@ public class PostController {
 	 * @return
 	 */
 	@RequestMapping("/post_list_view")
-	public String postListView(HttpServletRequest request, Model model) {
+	public String postListView(
+			@RequestParam(value = "prevId", required=false) Integer prevId,
+			@RequestParam(value = "nextId", required=false) Integer nextId,
+			HttpServletRequest request, 
+			Model model) {
 		HttpSession session = request.getSession();
 		Integer userId = (Integer) session.getAttribute("userId");
 		if (userId == null) {
@@ -35,9 +39,16 @@ public class PostController {
 			return "redirect:/user/sign_in_view";
 		}
 		
-		List<Post> postList = postBO.getPostListByUserId(userId);
+		List<Post> postList = postBO.getPostListByUserId(userId, prevId, nextId);
 		model.addAttribute("postList", postList);
 		model.addAttribute("viewName", "post/post_list");
+		
+		// 게시글 번호: 10 9 8 | 7 6 5 | 4 3 2 | 1
+		// 만약 7 6 5 페이지에 있다면 beforeId는 7을 넘기고, afterId는 5를 넘긴다.
+		if (postList.isEmpty() == false) {
+			model.addAttribute("prevId", postList.get(0).getId()); // 내려간 리스트 중 가장 앞쪽 id
+			model.addAttribute("nextId", postList.get(postList.size() - 1).getId()); // 내려간 리스트 중 가장 뒤쪽 id
+		}
 		return "template/layout";
 	}
 	
