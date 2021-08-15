@@ -16,13 +16,35 @@
 			`post`
 		WHERE
 			`userId` = #{userId}
-			<if test="standardId != null">
-			<![CDATA[ 
-			AND `id` <= #{standardId} 
-			]]>
-			</if>
+		<if test="direction == null">
 		ORDER BY `id` DESC
 		LIMIT ${limit}
+		</if>
+		<if test="direction == 'prev'">
+			<![CDATA[ 
+			AND `id` > #{standardId} 
+			]]>
+		ORDER BY `id`
+		LIMIT ${limit}
+		</if>
+		<if test="direction == 'next'">
+			<![CDATA[ 
+			AND `id` < #{standardId} 
+			]]>
+		ORDER BY `id` DESC
+		LIMIT ${limit}
+		</if>
+	</select>
+
+	<select id="selectPostIdByUserIdAndSort" parameterType="map" resultType="int">
+		SELECT
+			`id`
+		FROM 
+			`post`
+		WHERE
+			`userId` = #{userId}
+		ORDER BY `id` ${sort}
+		LIMIT 1
 	</select>
 	
 	<insert id="insertPost" parameterType="map">

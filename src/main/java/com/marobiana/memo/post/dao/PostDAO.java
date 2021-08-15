@@ -11,8 +11,13 @@ import com.marobiana.memo.post.model.Post;
 public interface PostDAO {
 	public List<Post> selectPostListByUserId(
 			@Param("userId") int userId,
+			@Param("direction") String direction,
 			@Param("standardId") Integer standardId,
 			@Param("limit") int limit);
+	
+	public int selectPostIdByUserIdAndSort(
+			@Param("userId") int userId, 
+			@Param("sort") String sort);
 	
 	public int insertPost(
 			@Param("userId") int userId, 

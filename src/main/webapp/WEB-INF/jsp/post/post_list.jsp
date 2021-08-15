@@ -41,11 +41,11 @@
 		</table>
 		
 		<div class="paging-area d-flex justify-content-center">
-			<a href="/post/post_list_view?prevId=${prevId}" class="mr-5">&lt;&lt; 이전</a>
-			<%-- next를 계속 누르면 리스트가 비게되고 한번 더 누르면 prevId, nextId가 모두 null이라 첫화면으로 돌아가는 버그 방지 --%>
-			<%-- 위의 상황에서 이전을 눌러도 첫화면으로 가지만 이것은 known issue --%>
-			<c:if test="${not empty postList}">
-			<a href="/post/post_list_view?nextId=${nextId}">다음 &gt;&gt;</a>
+			<c:if test="${prevId ne 0}">
+				<a href="/post/post_list_view?prevId=${prevId}" class="mr-5">&lt;&lt; 이전</a>
+			</c:if>
+			<c:if test="${nextId ne 0}">
+				<a href="/post/post_list_view?nextId=${nextId}">다음 &gt;&gt;</a>
 			</c:if>
 		</div>
 		
