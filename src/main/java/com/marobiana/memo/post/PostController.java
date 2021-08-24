@@ -40,31 +40,34 @@ public class PostController {
 		}
 		
 		List<Post> postList = postBO.getPostListByUserId(userId, prevIdParam, nextIdParam);
-		model.addAttribute("postList", postList);
-		model.addAttribute("viewName", "post/post_list");
 		
-		// 이전이나 다음이 없는 경우 nextId, prevId를 0으로 세팅한다.(뷰화면에서 0인지 검사)
-		int prevId = postList.get(0).getId();
-		int nextId = postList.get(postList.size() - 1).getId();
-		
-		// 게시글 번호 1이 있는 마지막 페이지
-		if (postBO.isLastPage(userId, nextId)) {
-			nextId = 0;
-		}
-		
-		// 게시글 번호 10 9 8이 있는 첫 페이지
-		if (postBO.isFirstPage(userId, prevId)) {
-			prevId = 0;
+		int prevId = 0;
+		int nextId = 0;
+		if (postList.isEmpty() == false) { // post가 없는 경우 에러 발생 방지
+			prevId = postList.get(0).getId();
+			nextId = postList.get(postList.size() - 1).getId();
+			
+			// 이전이나 다음이 없는 경우 nextId, prevId를 0으로 세팅한다.(뷰화면에서 0인지 검사)
+			
+			// 마지막 페이지 => nextId를 0으로 세팅한다.
+			if (postBO.isLastPage(userId, nextId)) {
+				nextId = 0;
+			}
+			
+			// 첫페이지 => prevId를 0으로 세팅한다.
+			if (postBO.isFirstPage(userId, prevId)) {
+				prevId = 0;
+			}
 		}
 		
 		// 게시글 번호: 10 9 8 | 7 6 5 | 4 3 2 | 1
-		// 만약 7 6 5 페이지에 있다면 beforeId는 7을 넘기고, afterId는 5를 넘긴다.
+		// 만약 7 6 5 페이지에 있다면 prevId는 7을 넘기고, nextId는 5를 넘긴다.
 		//  1) 이전 눌렀을 때: 7보다 큰 3개 가져오고 코드에서 reverse
 		//  2) 다음 눌렀을 때: 5보다 작은 3개
-		if (postList.isEmpty() == false) {
-			model.addAttribute("prevId", prevId); // 내려간 리스트 중 가장 앞쪽 id
-			model.addAttribute("nextId", nextId); // 내려간 리스트 중 가장 뒤쪽 id
-		}
+		model.addAttribute("postList", postList);
+		model.addAttribute("viewName", "post/post_list");
+		model.addAttribute("prevId", prevId); // 리스트 중 가장 앞쪽(제일 큰) id
+		model.addAttribute("nextId", nextId); // 리스트 중 가장 뒷쪽(제일 작은) id
 		
 		return "template/layout";
 	}
