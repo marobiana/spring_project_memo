@@ -94,7 +94,7 @@ $(document).ready(function() {
 		var loginId = $('#loginId').val().trim();
 		if (loginId == '') {
 			alert("아이디를 입력하세요.");
-			return;
+			return false;
 		}
 		
 		var password = $('#password').val().trim();
@@ -110,26 +110,26 @@ $(document).ready(function() {
 			// 텍스트박스의 값을 초기화 한다.
 			$('#password').val('');
 			$('#confirmPassword').val('');
-			return;
+			return false;
 		}
 		
 		var name = $('#name').val().trim();
 		if (name == '') {
 			alert("이름을 입력하세요.");
-			return;
+			return false;
 		}
 
 		var email = $('#email').val().trim();
 		if (email == '') {
 			alert("이메일 주소를 입력하세요.");
-			return;
+			return false;
 		}
 		
 		// 아이디 중복확인이 완료되었는지 확인
 		//-- idCheckOk <div>의 클래스에 d-none이 없으면 사용가능으로 본다.
 		if ($('#idCheckOk').hasClass('d-none') == true) {
 			alert("아이디 확인을 다시 해주세요.");
-			return;
+			return false;
 		}
 		
 		
